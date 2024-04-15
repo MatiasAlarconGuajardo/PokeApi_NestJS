@@ -1,0 +1,19 @@
+version:'3.1'
+
+services:
+  pokeApi_pg:
+    image: postgres:16.2
+    container_name: pokeApi_pg
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1705
+      POSTGRES_DB: PokemonDB
+    volumes:
+      - /postgres_data:/var/lib/postgresql
+    volumes:
+      postgresql-volume:
+      external: true
+    ports:
+      - 5432:5432
+    
