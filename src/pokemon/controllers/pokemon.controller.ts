@@ -5,9 +5,9 @@ import { PokemonService } from '../services/pokemon.service';
 export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
 
-  @Get('all')
-  public async getPokemonInfo() {
-    return await this.pokemonService.getPokemonInfo();
+  @Get('list/:skip?')
+  public async getPokemonInfo(@Param('skip') skip: number = 0) {
+    return await this.pokemonService.getPokemonInfo(skip);
   }
 
   @Get(':id')

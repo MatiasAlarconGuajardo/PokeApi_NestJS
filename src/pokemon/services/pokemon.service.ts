@@ -19,9 +19,12 @@ export class PokemonService {
     private readonly spritesRepository: Repository<sprites>,
   ) {}
 
-  public async getPokemonInfo(): Promise<PokemonInfo[]> {
+  public async getPokemonInfo(skip: number = 0): Promise<PokemonInfo[]> {
     try {
-      return await this.pokemonInfoRepository.find();
+      return await this.pokemonInfoRepository.find({
+        skip: skip,
+        take: 9,
+      });
     } catch (error) {
       throw new Error(error);
     }
