@@ -7,7 +7,8 @@ export class PokemonController {
 
   @Get('list/:skip?')
   public async getPokemonInfo(@Param('skip') skip: number = 0) {
-    return await this.pokemonService.getPokemonInfo(skip);
+    const results = await this.pokemonService.getPokemonInfo(skip);
+    return { results };
   }
 
   @Get(':id')

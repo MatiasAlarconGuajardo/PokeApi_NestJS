@@ -19,12 +19,19 @@ export class PokemonService {
     private readonly spritesRepository: Repository<sprites>,
   ) {}
 
-  public async getPokemonInfo(skip: number = 0): Promise<PokemonInfo[]> {
+  public async getPokemonInfo(
+    skip: number = 0,
+  ): Promise<{ name: string; url: string }[]> {
     try {
-      return await this.pokemonInfoRepository.find({
+      const data = await this.pokemonInfoRepository.find({
         skip: skip,
         take: 9,
       });
+      const mapped_data = data.map((pokemon) => ({
+        name: pokemon.poke_name,
+        url: `${pokemon.id_pokemon}`,
+      }));
+      return mapped_data;
     } catch (error) {
       throw new Error(error);
     }
