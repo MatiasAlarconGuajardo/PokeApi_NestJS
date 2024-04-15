@@ -1,6 +1,5 @@
 import { Pokemon_Abilities } from 'src/interfaces/pokemon.interface';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { PokeAbility } from './pokeability.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'abilities' })
 export class Abilities implements Pokemon_Abilities {
@@ -9,7 +8,4 @@ export class Abilities implements Pokemon_Abilities {
 
   @Column()
   ability_name: string;
-
-  @OneToMany(() => PokeAbility, (pokeAbility) => pokeAbility.ability)
-  pokeAbilities: PokeAbility[];
 }
