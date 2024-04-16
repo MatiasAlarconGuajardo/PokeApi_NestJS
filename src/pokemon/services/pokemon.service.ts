@@ -173,7 +173,6 @@ export class PokemonService {
       const ability = await this.abilitiesRepository.findOne({
         where: { id_ability: abilityId },
       });
-      console.log(ability);
       if (ability) {
         return {
           names: [
