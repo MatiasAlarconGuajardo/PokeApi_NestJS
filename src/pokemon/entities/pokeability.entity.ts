@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PokeAbilities } from 'src/interfaces/pokemon.interface';
-import { Abilities } from './abilities_entity';
+import { Abilities } from './abilities.entity';
 import { PokemonInfo } from './pokeInfo_entity';
 
 @Entity({ name: 'pokeability' })

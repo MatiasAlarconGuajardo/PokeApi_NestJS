@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { PokemonService } from './services/pokemon.service';
 import { PokemonController } from './controllers/pokemon.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Abilities } from './entities/abilities_entity';
+import { Abilities } from './entities/abilities.entity';
 import { PokeAbility } from './entities/pokeability.entity';
 import { PokemonInfo } from './entities/pokeInfo_entity';
 import { PokeType } from './entities/poketype.entity';
-import { sprites } from './entities/sprites.entity';
 import { Types } from './entities/types.entity';
+import { FlavorText } from './entities/flavortext.entity';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { Types } from './entities/types.entity';
       PokeAbility,
       PokeType,
       Types,
-      sprites,
+      FlavorText,
     ]),
   ],
   providers: [PokemonService],

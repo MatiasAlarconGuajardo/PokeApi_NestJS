@@ -6,6 +6,6 @@ export class Types implements Pokemon_Types {
   @PrimaryGeneratedColumn()
   id_types: number;
 
-  @Column({ length: 50 })
+  @Column()
   types_name: string;
 }

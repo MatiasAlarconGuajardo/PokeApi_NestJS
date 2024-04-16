@@ -1,22 +1,15 @@
-import { Pokemon_Info } from 'src/interfaces/pokemon.interface';
-import {
-  Column,
-  Entity,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { PokeType } from './poketype.entity';
 import { PokeAbility } from './pokeability.entity';
-import { sprites } from './sprites.entity';
+import { FlavorText } from './flavortext.entity';
 
 @Entity({ name: 'pokemon_info' })
-export class PokemonInfo implements Pokemon_Info {
+export class PokemonInfo implements PokemonInfo {
   @PrimaryGeneratedColumn()
-  id_pokemon: number;
+  id: number;
 
   @Column({ length: 15 })
-  poke_name: string;
+  name: string;
 
   @Column()
   weight: number;
@@ -43,20 +36,20 @@ export class PokemonInfo implements Pokemon_Info {
   speed: number;
 
   @Column()
-  total: number;
-
-  @Column()
   base_xp: number;
 
-  @Column('text')
-  flavortext: string;
+  @Column()
+  front_og: string;
 
-  @OneToMany(() => PokeType, (pokeType) => pokeType.pokemon_id)
+  @Column()
+  animated_front: string;
+
+  @OneToMany(() => PokeType, (pokeType) => pokeType.pokemon)
   pokeTypes: PokeType[];
 
-  @OneToMany(() => PokeAbility, (pokeAbility) => pokeAbility.pokemon_id)
+  @OneToMany(() => PokeAbility, (pokeAbility) => pokeAbility.pokemon)
   pokeAbilities: PokeAbility[];
 
-  @OneToOne(() => sprites, (sprites) => sprites.pokemon_id)
-  sprites: sprites;
+  @OneToMany(() => FlavorText, (flavorText) => flavorText.pokemonInfo)
+  flavorTexts: FlavorText[];
 }
