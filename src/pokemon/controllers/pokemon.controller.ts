@@ -20,8 +20,12 @@ export class PokemonController {
     return await this.pokemonService.getPokemonTypesById(id);
   }
   @Get('abilities/:id')
-  public async getPokemonAbilitiesByID(@Param('id') id: number) {
-    return await this.pokemonService.getPokemonAbilitiesByID(id);
+  public async getPokemonAbilitiesById(@Param('id') id: number) {
+    return await this.pokemonService.getPokemonAbilitiesById(id);
+  }
+  @Get('ability/:id')
+  public async getAbilityNameById(@Param('id') id: number) {
+    return await this.pokemonService.getAbilityNameById(id);
   }
   @Get('FlavorText/:id')
   public async getPokemonFlavorTextByID(@Param('id') id: number) {

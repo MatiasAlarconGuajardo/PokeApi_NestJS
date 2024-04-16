@@ -23,18 +23,6 @@ export interface Pokemon_Info {
   };
 }
 
-// type abilities = {
-//   ability: {
-//     id_pokeability: number;
-//     pokemon_id: number;
-//     ability_id: number;
-//     ability: {
-//       id_ability: number;
-//       ability_name: string;
-//     };
-//   };
-// };
-
 export interface PokemonInfoResponse {
   id: number;
   name: string;
@@ -42,7 +30,6 @@ export interface PokemonInfoResponse {
   height: number;
   stats: { base_stat: number; stat_name: string }[];
   base_experience: number;
-  // abilities: abilities[];
   sprites: {
     other: {
       'official-artwork': {
@@ -59,6 +46,11 @@ export interface PokemonInfoResponse {
       };
     };
   };
+  abilities: {
+    ability: {
+      url: string;
+    };
+  }[];
   types: {
     type: {
       url: string;

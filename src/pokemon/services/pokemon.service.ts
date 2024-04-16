@@ -10,6 +10,7 @@ import {
   PokemonInfoResponse,
 } from 'src/interfaces/pokemon.interface';
 import { Types } from '../entities/types.entity';
+import { Abilities } from '../entities/abilities.entity';
 
 @Injectable()
 export class PokemonService {
@@ -24,6 +25,8 @@ export class PokemonService {
     private readonly FlavorTextRepository: Repository<FlavorText>,
     @InjectRepository(Types)
     private readonly typesRepository: Repository<Types>,
+    @InjectRepository(Abilities)
+    private readonly abilitiesRepository: Repository<Abilities>,
   ) {}
 
   public async getPokemonInfo(
@@ -64,7 +67,13 @@ export class PokemonService {
           url: `types/${typeIds}/`,
         },
       }));
-      //const abilities = await this.getPokemonAbilitiesByID(data.id);
+      const abilities = await this.getPokemonAbilitiesById(data.id);
+
+      const abilitiesMapped = abilities.map((ability) => ({
+        ability: {
+          url: `ability/${ability}/`,
+        },
+      }));
 
       const mapped_data: PokemonInfoResponse = {
         id: data.id,
@@ -98,6 +107,7 @@ export class PokemonService {
           },
         },
         types: types,
+        abilities: abilitiesMapped,
       };
       return mapped_data;
     } catch (error) {
@@ -143,15 +153,43 @@ export class PokemonService {
     }
   }
 
-  public async getPokemonAbilitiesByID(id: number): Promise<PokeAbility[]> {
+  public async getPokemonAbilitiesById(id: number): Promise<number[]> {
     try {
-      return await this.pokeAbilityRepository
+      const pokeAbilities = await this.pokeAbilityRepository
         .createQueryBuilder('pokeAbility')
         .leftJoinAndSelect('pokeAbility.ability', 'ability')
         .where('pokeAbility.pokemon_id = :id', { id })
         .getMany();
+      return pokeAbilities.map((pokeAbility) => pokeAbility.ability_id);
     } catch (error) {
-      throw new Error(error);
+      throw new Error('Error al obtener las habilidades de Pokémon');
+    }
+  }
+
+  public async getAbilityNameById(
+    abilityId: number,
+  ): Promise<{ names: { language: { name: string }; name: string }[] } | null> {
+    try {
+      const ability = await this.abilitiesRepository.findOne({
+        where: { id_ability: abilityId },
+      });
+      console.log(ability);
+      if (ability) {
+        return {
+          names: [
+            {
+              language: {
+                name: 'es',
+              },
+              name: ability.ability_name,
+            },
+          ],
+        };
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw new Error('Error al obtener el nombre de la habilidad de Pokémon');
     }
   }
   public async getPokemonFlavorTextByID(
