@@ -44,12 +44,20 @@ export class PokemonService {
     try {
       const data = await this.pokemonInfoRepository
         .createQueryBuilder('pokemon_info')
-        .where('id = :id_query', { id_query })
+        .where('pokemon_info.id = :id_query', { id_query })
         .getOne();
 
       if (!data) {
         throw new Error('Pokemon no encontrado');
       }
+
+      const typeIds = await this.getPokemonTypesById(data.id);
+
+      const types = typeIds.map((typeId) => ({
+        type: {
+          url: `types/${typeId}/`,
+        },
+      }));
 
       const mapped_data: PokemonInfoResponse = {
         id: data.id,
@@ -81,6 +89,7 @@ export class PokemonService {
             },
           },
         },
+        types: types,
       };
       return mapped_data;
     } catch (error) {
@@ -88,15 +97,14 @@ export class PokemonService {
     }
   }
 
-  public async getPokemonTypesById(id: number): Promise<string[]> {
+  public async getPokemonTypesById(id: number): Promise<number[]> {
     try {
       const pokeTypes = await this.pokeTypeRepository
         .createQueryBuilder('poketype')
         .leftJoinAndSelect('poketype.type', 'type')
         .where('poketype.pokemon_id = :id', { id })
         .getMany();
-
-      return pokeTypes.map((pokeType) => pokeType.type.types_name);
+      return pokeTypes.map((pokeType) => pokeType.type.id_types);
     } catch (error) {
       throw new Error('Error al obtener los tipos de Pokémon');
     }
@@ -118,6 +126,29 @@ export class PokemonService {
       return await this.FlavorTextRepository.createQueryBuilder('flavorText')
         .where({ pokemon_id: id })
         .getOne();
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  public async getTypes(
+    id: number,
+  ): Promise<{ names: { language: { name: string }; name: string }[] }> {
+    try {
+      const data = await this.pokeTypeRepository
+        .createQueryBuilder('poketype')
+        .leftJoinAndSelect('poketype.type', 'type')
+        .where('poketype.pokemon_id = :id', { id })
+        .getMany();
+
+      const typeNames = data.map((type) => ({
+        language: {
+          name: 'es',
+        },
+        name: type.type.types_name,
+      }));
+
+      return { names: typeNames };
     } catch (error) {
       throw new Error(error);
     }

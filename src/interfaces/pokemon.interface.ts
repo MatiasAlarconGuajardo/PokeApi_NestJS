@@ -46,6 +46,11 @@ export interface PokemonInfoResponse {
       };
     };
   };
+  types: {
+    type: {
+      url: string;
+    };
+  }[];
 }
 
 export interface Pokemon_Abilities {

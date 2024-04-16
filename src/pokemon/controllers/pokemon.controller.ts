@@ -27,4 +27,9 @@ export class PokemonController {
   public async getPokemonFlavorTextByID(@Param('id') id: number) {
     return await this.pokemonService.getPokemonFlavorTextByID(id);
   }
+
+  @Get('types/:id')
+  public async getTypes(@Param('id') id: number) {
+    return await this.pokemonService.getTypes(id);
+  }
 }

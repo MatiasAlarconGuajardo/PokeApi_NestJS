@@ -52,4 +52,7 @@ export class PokemonInfo implements PokemonInfo {
 
   @OneToMany(() => FlavorText, (flavorText) => flavorText.pokemonInfo)
   flavorTexts: FlavorText[];
+
+  @OneToMany(() => PokeType, (pokeType) => pokeType.pokemon)
+  types: PokeType[];
 }
