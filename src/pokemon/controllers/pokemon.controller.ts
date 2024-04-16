@@ -29,7 +29,7 @@ export class PokemonController {
   }
 
   @Get('types/:id')
-  public async getTypes(@Param('id') id: number) {
-    return await this.pokemonService.getTypes(id);
+  public async getTypeNameById(@Param('id') id: number) {
+    return await this.pokemonService.getTypeNameById(id);
   }
 }

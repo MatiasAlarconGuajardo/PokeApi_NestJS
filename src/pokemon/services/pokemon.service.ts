@@ -9,6 +9,7 @@ import {
   FlavorTextResponse,
   PokemonInfoResponse,
 } from 'src/interfaces/pokemon.interface';
+import { Types } from '../entities/types.entity';
 
 @Injectable()
 export class PokemonService {
@@ -21,6 +22,8 @@ export class PokemonService {
     private readonly pokeAbilityRepository: Repository<PokeAbility>,
     @InjectRepository(FlavorText)
     private readonly FlavorTextRepository: Repository<FlavorText>,
+    @InjectRepository(Types)
+    private readonly typesRepository: Repository<Types>,
   ) {}
 
   public async getPokemonInfo(
@@ -56,17 +59,19 @@ export class PokemonService {
 
       const typeIds = await this.getPokemonTypesById(data.id);
 
-      const types = typeIds.map((typeId) => ({
+      const types = typeIds.map((typeIds) => ({
         type: {
-          url: `types/${typeId}/`,
+          url: `types/${typeIds}/`,
         },
       }));
+      //const abilities = await this.getPokemonAbilitiesByID(data.id);
 
       const mapped_data: PokemonInfoResponse = {
         id: data.id,
         name: data.name,
         weight: data.weight,
         height: data.height,
+
         stats: [
           { base_stat: data.hp, stat_name: 'hp' },
           { base_stat: data.atk, stat_name: 'atk' },
@@ -112,6 +117,31 @@ export class PokemonService {
       throw new Error('Error al obtener los tipos de Pokémon');
     }
   }
+  public async getTypeNameById(
+    typeId: number,
+  ): Promise<{ names: { language: { name: string }; name: string }[] } | null> {
+    try {
+      const type = await this.typesRepository.findOne({
+        where: { id_types: typeId },
+      });
+      if (type) {
+        return {
+          names: [
+            {
+              language: {
+                name: 'es',
+              },
+              name: type.types_name,
+            },
+          ],
+        };
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw new Error('Error al obtener el nombre del tipo de Pokémon');
+    }
+  }
 
   public async getPokemonAbilitiesByID(id: number): Promise<PokeAbility[]> {
     try {
@@ -149,25 +179,17 @@ export class PokemonService {
       throw new Error(error);
     }
   }
-
-  public async getTypes(
-    id: number,
-  ): Promise<{ names: { language: { name: string }; name: string }[] }> {
+  public async getTypeName(typeId: number): Promise<string | null> {
     try {
-      const data = await this.pokeTypeRepository
-        .createQueryBuilder('poketype')
-        .leftJoinAndSelect('poketype.type', 'type')
-        .where('poketype.pokemon_id = :id', { id })
-        .getMany();
+      const type = await this.typesRepository.findOne({
+        where: { id_types: typeId },
+      });
 
-      const typeNames = data.map((type) => ({
-        language: {
-          name: 'es',
-        },
-        name: type.type.types_name,
-      }));
-
-      return { names: typeNames };
+      if (type) {
+        return type.types_name;
+      } else {
+        return null;
+      }
     } catch (error) {
       throw new Error(error);
     }
