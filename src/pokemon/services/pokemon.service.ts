@@ -5,7 +5,10 @@ import { PokemonInfo } from '../entities/pokeInfo_entity';
 import { PokeType } from '../entities/poketype.entity';
 import { PokeAbility } from '../entities/pokeability.entity';
 import { FlavorText } from '../entities/flavortext.entity';
-import { PokemonInfoResponse } from 'src/interfaces/pokemon.interface';
+import {
+  FlavorTextResponse,
+  PokemonInfoResponse,
+} from 'src/interfaces/pokemon.interface';
 
 @Injectable()
 export class PokemonService {
@@ -121,11 +124,27 @@ export class PokemonService {
       throw new Error(error);
     }
   }
-  public async getPokemonFlavorTextByID(id: number): Promise<FlavorText> {
+  public async getPokemonFlavorTextByID(
+    id: number,
+  ): Promise<FlavorTextResponse> {
     try {
-      return await this.FlavorTextRepository.createQueryBuilder('flavorText')
+      const data = await this.FlavorTextRepository.createQueryBuilder(
+        'flavor_text',
+      )
         .where({ pokemon_id: id })
         .getOne();
+      const mapped_data: FlavorTextResponse = {
+        flavor_text_entries: [
+          {
+            language: {
+              name: 'es',
+            },
+            flavor_text: data.flavortext,
+          },
+        ],
+      };
+
+      return mapped_data;
     } catch (error) {
       throw new Error(error);
     }

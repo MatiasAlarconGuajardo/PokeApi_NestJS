@@ -74,3 +74,12 @@ export interface PokeTypes {
   pokemon_id: number;
   type_id: number;
 }
+
+export interface FlavorTextResponse {
+  flavor_text_entries: {
+    flavor_text: string;
+    language: {
+      name: string;
+    };
+  }[];
+}

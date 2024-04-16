@@ -16,7 +16,7 @@ export class FlavorText {
   pokemon_id: number;
 
   @Column()
-  flavorText: string;
+  flavortext: string;
 
   @ManyToOne(() => PokemonInfo)
   @JoinColumn({ name: 'pokemon_id' })
